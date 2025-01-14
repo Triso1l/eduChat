@@ -5,13 +5,24 @@ Page({
 		messages: [
 			// {
 			// 	"sender": 'user',
-			// 	"content": "hello world"
+			// 	"content": "hello world",
+			// 	"type": "text"
 			// }
 		], // 聊天消息数组
 		inputMessage: '', // 输入框内容
 		scrollTop: 0, // 用于自动滚动到最新消息
 		socketOpen: false, // WebSocket 连接状态
 		socketTask: null, // WebSocket 任务
+		pendingImages: [
+			// {
+			// 	'url': 'http://192.168.0.72:9000/uploads/1736866568_7SHwKEuETlcP2dc5428be3154375b6c78d2b16efcbc2.png',
+			// 	'id': 1
+			// },
+			// {
+			// 	'url': 'http://192.168.0.72:9000/uploads/1736866836_TbWNGftm2oLvc81f95f1583c9018b8a6b1d2eb8e35cb.png',
+			// 	'id': 2
+			// },
+		] // 待发送的图片数组
 	},
 
 	onLoad() {
@@ -40,7 +51,7 @@ Page({
 			that.setData({
 				socketOpen: true
 			})
-			that.addMessage("系统：连接已建立，可以开始聊天了。", "system")
+			that.addMessage("系统：连接已建立，可以开始聊天了。", "system", "text")
 		});
 
 		// 监听 WebSocket 接收消息
@@ -49,10 +60,10 @@ Page({
 			try {
 				const message = JSON.parse(res.data)
 				if (message.sender && message.content) {
-					if (message.content == '<start>'){
+					if (message.content == '<start>') {
 						message.content = ''
 						that.addMessage(message.content, message.sender, message.type, true)
-					}else{
+					} else {
 						that.addMessage(message.content, message.sender, message.type, false)
 					}
 				} else if (message.error) {
@@ -81,7 +92,7 @@ Page({
 			that.setData({
 				socketOpen: false
 			})
-			that.addMessage("系统：WebSocket 连接已关闭。", "system")
+			that.addMessage("系统：WebSocket 连接已关闭。", "system", "text")
 			// 可选：尝试重连
 			// setTimeout(that.initSocket, 500)
 		});
@@ -93,9 +104,7 @@ Page({
 
 	// 关闭 WebSocket 连接
 	closeSocket() {
-		const {
-			socketTask
-		} = this.data
+		const { socketTask } = this.data
 		if (socketTask) {
 			socketTask.close()
 		}
@@ -126,12 +135,14 @@ Page({
 						try {
 							const data = JSON.parse(uploadRes.data);
 							if (data.url) {
-								// 将图片消息添加到聊天记录
-								that.addMessage(data.url, "user", "image");
-								// 发送图片消息到聊天接口
-								that.sendMessageToServer({
-									type: 'image',
-									content: data.url
+								// 将图片添加到待发送的图片数组
+								const newPendingImage = {
+									url: data.url,
+									id: Date.now() // 唯一标识符，用于删除
+								};
+								that.setData({
+									pendingImages: [...that.data.pendingImages, newPendingImage],
+									scrollTop: that.data.messages.length * 1000 // 保持滚动位置
 								});
 							} else {
 								wx.showToast({
@@ -161,57 +172,79 @@ Page({
 	// 发送消息按钮
 	sendMessage() {
 		const message = this.data.inputMessage.trim();
-		if (!message) {
+		const { pendingImages } = this.data;
+
+		if (!message && pendingImages.length === 0) {
+			wx.showToast({
+				title: '请输入消息或选择图片',
+				icon: 'none'
+			});
 			return;
 		}
-		// 添加用户消息到聊天记录
-		this.addMessage(message, "user", "text");
-		// 发送消息到服务器
-		// message = this.data.messages
+
+		// // 如果有待发送的图片，添加到聊天记录并发送
+		if (pendingImages.length > 0) {
+			pendingImages.forEach(image => {
+				this.addMessage(image.url, "user", "image");
+				// this.sendMessageToServer({
+				// 	type: 'image',
+				// 	content: image.url
+				// });
+			});
+		}
+
+		// // 如果有文本消息，添加到聊天记录并发送
+		if (message) {
+			this.addMessage(message, "user", "text");
+			// this.sendMessageToServer({
+			// 	type: 'text',
+			// 	content: message
+			// });
+		}
+
 		this.sendMessageToServer({
-			type: 'text',
-			message: this.data.messages
-		});
-		// 清空输入框
+				type: 'text',
+				content: this.data.messages
+			});
+
+		// 清空输入框和待发送的图片
 		this.setData({
-			inputMessage: ''
+			inputMessage: '',
+			pendingImages: []
 		});
 	},
 
 	// 添加消息到聊天记录
 	addMessage(content, sender, type = 'text', newAdd = true) {
-		if (newAdd){
+		if (newAdd) {
 			const newMessage = {
 				sender,
 				content,
 				type
 			};
-			console.log(this.data)
 			this.setData({
 				messages: [...this.data.messages, newMessage],
-				scrollTop: this.data.messages.length * 1000 // 简单计算滚动位置
+				scrollTop: (this.data.messages.length + 1) * 1000 // 简单计算滚动位置
 			});
-		}else{
+		} else {
 			const messages = this.data.messages
-			const newMessage = messages[messages.length-1]
+			const newMessage = messages[messages.length - 1]
 			newMessage.content = newMessage.content + content
-			messages[messages.length-1] = newMessage
+			messages[messages.length - 1] = newMessage
 			this.setData({
 				messages: messages,
-				scrollTop: this.data.messages.length * 2000 // 简单计算滚动位置
+				scrollTop: (this.data.messages.length + 1) * 2000 // 简单计算滚动位置
 			});
 		}
-		
 	},
 
 	// 发送消息到服务器 via WebSocket
 	sendMessageToServer(message) {
-		const {
-			socketOpen,
-			socketTask
-		} = this.data;
+		const { socketOpen, socketTask } = this.data;
 		if (socketOpen && socketTask) {
-			const payload = JSON.stringify(message);
+			const payload = JSON.stringify({
+				message: message
+			});
 			socketTask.send({
 				data: payload,
 				success() {
@@ -231,5 +264,14 @@ Page({
 				icon: 'none'
 			})
 		}
+	},
+
+	// 删除待发送的图片
+	removePendingImage(e) {
+		const { id } = e.currentTarget.dataset;
+		const updatedPendingImages = this.data.pendingImages.filter(img => img.id !== id);
+		this.setData({
+			pendingImages: updatedPendingImages
+		});
 	}
 });

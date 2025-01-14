@@ -1,24 +1,23 @@
 /* pages/chat/chat.wxss */
-
 .container {
-	display: flex;
+  display: flex;
   flex-direction: column;
   padding: 0;
   height: 91vh;
   width: 100vw;
   margin: 0;
-	background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .chat-area {
-	flex: 1;
-	padding: 10px;
+  flex: 1;
+  padding: 10px;
   /* background-color: #ffffff; */
   height: 90%;
 }
 
 .message {
-	display: flex;
+  display: flex;
   margin-bottom: 10px;
   /* flex-direction: row-reverse; */
 }
@@ -31,82 +30,129 @@
 }
 
 .bot {
-	justify-content: flex-start;
+  justify-content: flex-start;
 }
 
 .avatar {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	margin: 0 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 10px;
 }
 
 .user-avatar {
-	background-color: #4CAF50;
-	/* 用户头像颜色 */
+  background-color: #4CAF50;
+  /* 用户头像颜色 */
 }
 
 .bot-avatar {
-	background-color: #2196F3;
-	/* 机器人头像颜色 */
+  background-color: #2196F3;
+  /* 机器人头像颜色 */
 }
 
 .bubble {
-	max-width: 70%;
-	padding: 10px;
-	border-radius: 10px;
-	word-wrap: break-word;
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
 }
 
 .user-bubble {
-	background-color: #DCF8C6;
-	/* 用户消息气泡颜色 */
+  background-color: #DCF8C6;
+  /* 用户消息气泡颜色 */
 }
 
 .bot-bubble {
-	background-color: #E6E6E6;
-	/* 机器人消息气泡颜色 */
+  background-color: #E6E6E6;
+  /* 机器人消息气泡颜色 */
 }
 
 .input-area {
-	display: flex;
-	align-items: center;
-	padding: 5px; /* 减少 padding */
-	background-color: #ffffff;
-	border-top: 1px solid #e0e0e0;
-  gap: 5px; /* 添加元素间的间隙 */
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  /* 减少 padding */
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  gap: 5px;
+  /* 添加元素间的间隙 */
   height: 8vh;
 }
 
 .input-box {
-flex: 1;
-height: 35px; /* 减小高度 */
-border: 1px solid #cccccc;
-border-radius: 15px; /* 调整圆角 */
-padding: 0 10px; /* 减少内边距 */
-margin: 0; /* 去除外边距 */
-font-size: 14px; /* 调整字体大小 */
+  flex: 1;
+  height: 35px;
+  /* 减小高度 */
+  border: 1px solid #cccccc;
+  border-radius: 15px;
+  /* 调整圆角 */
+  padding: 0 10px;
+  /* 减少内边距 */
+  margin: 0;
+  /* 去除外边距 */
+  font-size: 14px;
+  /* 调整字体大小 */
 }
 
 .upload-button,
 .send-button {
-width: 3px; /* 调整宽度 */
-height: 35px; /* 与输入框对齐 */
-border: none;
-background-color: transparent;
-/* font-size: 16px; 缩小字体大小 */
-display: flex;
-align-items: center;
-justify-content: center; /* 居中内容 */
-padding: 0; /* 去除默认 padding */
+  width: 3px;
+  /* 调整宽度 */
+  height: 35px;
+  /* 与输入框对齐 */
+  border: none;
+  background-color: transparent;
+  /* font-size: 16px; 缩小字体大小 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 居中内容 */
+  padding: 0;
+  /* 去除默认 padding */
 }
 
 .upload-button {
-margin-right: 5px; /* 和发送按钮保持一点间距 */
+  margin-right: 5px;
+  /* 和发送按钮保持一点间距 */
 }
 
 .message-image {
-	margin-top: 5px;
-	max-width: 100%;
-	border-radius: 5px;
+  margin-top: 5px;
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+/* 预览待发送的图片样式 */
+.pending-images {
+  display: flex;
+  flex-wrap: wrap;
+  /* padding: 10px; */
+  background-color: #f0f0f0;
+  border-top: 1px solid #e0e0e0;
+  width: 100vw;
+  height: 20vh;
+}
+
+.pending-image-item {
+  margin: 10px;
+  width: 20vw;
+  /* height: 100%; */
+}
+
+.pending-image {
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.remove-image-button {
+  width: 20px;
+  /* height: 2vh; */
+  /* display: block; */
+  /* box-sizing: border-box; */
+  /* left: 72rpx;
+  top: -216rpx;
+  position: relative; */
 }
