@@ -12,11 +12,19 @@
 			</view>
 		</view>
 	</scroll-view>
+	<!-- 预览待发送的图片 -->
+	<view class="pending-images" wx:if="{{pendingImages.length > 0}}">
+		<view wx:for="{{pendingImages}}" wx:key="id" class="pending-image-item">
+			<image src="{{item.url}}" mode="aspectFit" class="pending-image"></image>
+			<button class="remove-image-button" data-id="{{item.id}}" bindtap="removePendingImage" size="mini" style="position: relative; left: 103rpx; top: -192rpx">✖️</button>
+		</view>
+	</view>
 </view>
+
+
 <!-- 输入区域 -->
 <view class="input-area">
 	<input class="input-box" placeholder="请输入消息" bindinput="handleInput" value="{{inputMessage}}" />
 	<button class="upload-button" bindtap="chooseImage" style="width: 104rpx; height: 70rpx; display: flex; box-sizing: border-box; left: 0rpx; top: 0rpx">📷</button>
 	<button class="send-button" bindtap="sendMessage" style="width: 138rpx; height: 70rpx; display: flex; box-sizing: border-box; left: 0rpx; top: 0rpx">发送</button>
 </view>
-<!-- </view> -->
