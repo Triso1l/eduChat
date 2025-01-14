@@ -1,0 +1,22 @@
+<!-- pages/chat/chat.wxml -->
+<view class="container">
+	<scroll-view class="chat-area" scroll-y="true" scroll-with-animation="true" scroll-top="{{scrollTop}}">
+		<view wx:for="{{messages}}" wx:key="index" class="message {{item.sender === 'user' ? 'user' : 'bot'}}">
+			<!-- 头像 -->
+			<view class="avatar {{item.sender === 'user' ? 'user-avatar' : 'bot-avatar'}}"></view>
+
+			<!-- 气泡 -->
+			<view class="bubble {{item.sender === 'user' ? 'user-bubble' : 'bot-bubble'}}">
+				<text wx:if="{{item.type != 'image'}}">{{item.content}}</text>
+				<image wx:if="{{item.type === 'image'}}" src="{{item.content}}" mode="aspectFit" class="message-image"></image>
+			</view>
+		</view>
+	</scroll-view>
+</view>
+<!-- 输入区域 -->
+<view class="input-area">
+	<input class="input-box" placeholder="请输入消息" bindinput="handleInput" value="{{inputMessage}}" />
+	<button class="upload-button" bindtap="chooseImage" style="width: 104rpx; height: 70rpx; display: flex; box-sizing: border-box; left: 0rpx; top: 0rpx">📷</button>
+	<button class="send-button" bindtap="sendMessage" style="width: 138rpx; height: 70rpx; display: flex; box-sizing: border-box; left: 0rpx; top: 0rpx">发送</button>
+</view>
+<!-- </view> -->
