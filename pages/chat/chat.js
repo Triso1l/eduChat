@@ -5,8 +5,8 @@ Page({
 		messages: [
 			// {
 			// 	"sender": 'user',
-			// 	"content": "hello world",
-			// 	"type": "text"
+			// 	"content": "https://api.mingchat.me:9000/uploads/1736866568_7SHwKEuETlcP2dc5428be3154375b6c78d2b16efcbc2.png",
+			// 	"type": "image"
 			// }
 		], // 聊天消息数组
 		inputMessage: '', // 输入框内容
@@ -15,11 +15,11 @@ Page({
 		socketTask: null, // WebSocket 任务
 		pendingImages: [
 			// {
-			// 	'url': 'http://192.168.0.72:9000/uploads/1736866568_7SHwKEuETlcP2dc5428be3154375b6c78d2b16efcbc2.png',
+			// 	'url': 'http://api.mingchat.me:9000/uploads/1736866568_7SHwKEuETlcP2dc5428be3154375b6c78d2b16efcbc2.png',
 			// 	'id': 1
 			// },
 			// {
-			// 	'url': 'http://192.168.0.72:9000/uploads/1736866836_TbWNGftm2oLvc81f95f1583c9018b8a6b1d2eb8e35cb.png',
+			// 	'url': 'http://api.mingchat.me:9000/uploads/1736866836_TbWNGftm2oLvc81f95f1583c9018b8a6b1d2eb8e35cb.png',
 			// 	'id': 2
 			// },
 		] // 待发送的图片数组
@@ -36,7 +36,7 @@ Page({
 	// 初始化 WebSocket 连接
 	initSocket() {
 		const that = this;
-		const socketUrl = 'ws://192.168.0.72:9000/connect'; // 替换为您的 WebSocket 服务器地址，使用 wss://
+		const socketUrl = 'wss://api.mingchat.me:9000/connect'; // 替换为您的 WebSocket 服务器地址，使用 wss://
 
 		const socketTask = wx.connectSocket({
 			url: socketUrl,
@@ -128,7 +128,7 @@ Page({
 				const tempFilePaths = res.tempFilePaths;
 				// 上传图片到服务器
 				wx.uploadFile({
-					url: 'http://192.168.0.72:9000/api/upload', // 替换为您的服务器上传接口，使用 https://
+					url: 'https://api.mingchat.me:9000/api/upload', // 替换为您的服务器上传接口，使用 https://
 					filePath: tempFilePaths[0],
 					name: 'image',
 					success(uploadRes) {
